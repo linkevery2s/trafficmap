@@ -60,7 +60,7 @@
     if (!d || !d.object) return null;
     let obj = d.object;
 
-    const html_tr = ["<table>", obj.DAY , "</table>"].join("\n");
+    const html_tr = ["<table>", obj.day + " " + obj.hh + "時" + obj.mm + "分" , "</table>"].join("\n");
 
     return {
       html: html_tr
@@ -78,7 +78,7 @@
     radiusMinPixels: 3,
     radiusMaxPixels: 3,
     lineWidthMinPixels: 1,
-    getPosition: d => [Number(d.LNG), Number(d.LAT)],
+    getPosition: d => [Number(d.lng), Number(d.lat)],
     getRadius: d => 15,
     getFillColor: d => [232, 57, 41]
   })

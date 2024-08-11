@@ -65,7 +65,7 @@
   const layer = new GridLayer({
     id: 'grid',
     data,
-    getPosition: d => [Number(d.LNG), Number(d.LAT)],
+    getPosition: d => [Number(d.lng), Number(d.lat)],
     colorRange,
     getColorWeight: point => 1,
     getElevationWeight: point => 1,

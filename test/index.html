@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<title>交通事故発生件数を3Dに可視化</title>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta property="og:title" content="交通事故発生件数を3Dに可視化" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://trafficmap.netlify.app/ogp.jpg" />
+  <meta name="description" content="警察庁が公開しているオープンデータを用いて、交通事故発生件数を３Dに可視化しました。年間30万件以上の事故が発生しています。この可視化を通して、件数が少しでも減ることを願っています。" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="交通事故発生件数を3Dに可視化" />
+  <meta name="twitter:image" content="https://trafficmap.netlify.app/ogp.jpg" />
+  <meta name="author" content="仁志">
+  <meta name="keywords" content="3d,3D,交通,交通事故,DeckGL,deck,maplibregl,maplibre"/>
+
+  <script src="https://unpkg.com/deck.gl@^8.1.0/dist.min.js"></script>
+  <script src='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MPP84V2NHB');
+  </script>
+
+  <style>
+    html,body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .deck-tooltip {
+      font-family: Helvetica, Arial, sans-serif;
+      padding: 8px !important;
+      color: #fff !important;
+      background: #192f60 !important;
+      max-width: 110px;
+      font-size: .8em;
+      opacity: 0.8;
+    }
+
+    .attribution {
+      position: absolute;
+      bottom: 40px;
+      right: 0;
+      z-index: 9;
+      padding: 2px 4px;
+      background-color: rgba(255, 255, 255, 0.5);
+      font-size: 11px;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="attribution">
+    © <a href="https://www.npa.go.jp/publications/statistics/koutsuu/opendata/index_opendata.html" target="_blank">交通事故統計情報のオープンデータ（警察庁）</a>を<br><a href="https://hitoshi2s.netlify.app/" target="_blank">仁志</a>が加工・編集して作成
+  </div>
+
+</body>
+
+<script type="text/javascript">
+
+  const {DeckGL,HexagonLayer, GridLayer} = deck;
+
+  const data = d3.csv('./2023.csv');
+
+  const colorRange  = [
+    [0, 255, 255, 127],
+    [63, 255, 0, 127],
+    [255, 255, 0, 127],
+    [255, 127, 60, 170],
+    [255, 0, 0, 212],
+    [152, 0, 38, 255]
+    ];
+
+  const layer = new GridLayer({
+    id: 'grid',
+    data,
+    getPosition: d => [Number(d.LNG), Number(d.LAT)],
+    colorRange,
+    getColorWeight: point => 1,
+    getElevationWeight: point => 1,
+    colorAggregation: 'SUM',
+    elevationScale: 350,
+    extruded: true,
+    pickable: true,
+    cellSize: 2000,
+    opacity: 1,
+    coverage: 1,
+  });
+
+  new DeckGL({
+    mapStyle: 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
+    initialViewState: {
+      longitude: 137.175,
+      latitude: 37.066,
+      zoom: 4.8,
+      maxZoom: 20,
+      pitch: 40,
+      bearing: -10
+    },
+    controller: true,
+    layers: layer,
+    getTooltip: ({object}) => object && `全事故件数: ${object.count}`
+  });
+</script>
+
+</html>

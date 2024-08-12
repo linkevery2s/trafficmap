@@ -1,18 +1,21 @@
 <!DOCTYPE HTML>
 <html lang="ja">
 <title>Traffic Visualization</title>
+
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
-  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+  <meta charset="UTF-8" name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta property="og:title" content="Traffic Visualization" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://trafficmap.netlify.app/ogp.jpg" />
-  <meta name="description" content="警察庁が公開しているオープンデータを用いて、交通事故発生件数を３可視化しました。年間30万件以上の事故が発生しています。この可視化を通して、件数が少しでも減ることを願っています。" />
+  <meta property="og:image" content="https://trafficmap.netlify.app/ogp.png" />
+  <meta name="description"
+    content="警察庁が公開しているオープンデータを用いて、交通事故発生件数を３可視化しました。年間30万件以上の事故が発生しています。この可視化を通して、件数が少しでも減ることを願っています。" />
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Traffic Visualization" />
-  <meta name="twitter:image" content="https://trafficmap.netlify.app/ogp.jpg" />
+  <meta name="twitter:image" content="https://trafficmap.netlify.app/ogp.png" />
   <meta name="author" content="仁志">
-  <meta name="keywords" content="3d,3D,交通,交通事故,DeckGL,deck,maplibregl,maplibre"/>
+  <meta name="keywords" content="3d,3D,交通,交通事故,DeckGL,deck,maplibregl,maplibre" />
 
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="shortcut icon" href="./apple-touch-icon.png">
@@ -27,7 +30,7 @@
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
   <link rel="manifest" href="./manifest.json">
@@ -39,20 +42,146 @@
     }
   </script>
 
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      z-index: 0;
+    }
+
+    body {
+      font-family: "Source Han Serif JP", "Noto Serif CJK JP", "游明朝体", "Yu Mincho", YuMincho, serif;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      z-index: 5;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 12%;
+      height: 100%;
+      max-width: 100px;
+      border-right: 1px solid #000;
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .nav p {
+      cursor: pointer;
+    }
+
+    #overview {
+      position: fixed;
+      background: rgba(255, 255, 255, 1);
+      z-index: 9;
+      width: 70%;
+      height: 100%;
+      top: 0;
+      left: 12%;
+      margin: 0;
+      padding: 0;
+      display: none;
+    }
+
+    #closed-btn,
+    #closed-btn2,
+    #closed-btn3,
+    #closed-btn4,
+    #closed-btn5 {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      border-radius: .3em;
+      color: #ffffff;
+      background: #1e50a2;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    #closed-btn:hover,
+    #closed-btn2:hover,
+    #closed-btn3:hover,
+    #closed-btn4:hover,
+    #closed-btn5:hover {
+      background: #ffffff;
+      color:#1e50a2;
+      border: 1px solid #1e50a2;
+    }
+
+    @media screen and (min-width: 768px) {
+
+      .nav {
+        width: 100px;
+      }
+
+      #overview {
+        left: 100px;
+        max-width: 500px;
+      }
+
+    }
+  </style>
+
 </head>
+
 <body>
 
+  <div class="nav text-center">
+    <p class="home"><i class="fa-solid fa-xl fa-bars mt-3"></i></p>
+    <p class="map"><i class="fa-solid fa-xl fa-map mt-7"></i></p>
+    <p class="database"><i class="fa-solid fa-xl fa-database mt-7"></i></p>
+    <p class="share"><i class="fa-solid fa-xl fa-share-nodes mt-7"></i></p>
 
+  </div>
+
+  <div id="overview"><span id="closed-btn" class="py-2 px-3 text-xs"><i class="fa-solid fa-arrow-left"></i></span>
+    <h1 class="text-xl pl-3 pt-3">Traffic Visualization</h1>
+
+  </div>
+
+  <span class="container"></span>
+
+
+  <script type="module">
+
+    const cont = document.querySelector(".container");
+
+    cont.innerHTML = "<iframe src='./2023/2023visual.html' width='100%' height= '100%' border='0'></iframe>";
+
+    const home = document.querySelector(".home");
+
+    home.addEventListener("click", () => {
+      $('#overview').fadeIn();
+    })
+
+    const closed_btn = document.querySelector("#closed-btn");
+
+    closed_btn.addEventListener('click', () => {
+      $('#overview').fadeOut();
+    });
+
+  </script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-MPP84V2NHB');
   </script>
 
-  </body>
-  </html>
+</body>
+
+</html>

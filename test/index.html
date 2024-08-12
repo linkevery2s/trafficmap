@@ -93,6 +93,25 @@
       display: none;
     }
 
+    .ja{
+      color: #1e50a2;
+    }
+
+    .new::before {
+      content: attr(data-en);
+      display: block;
+      color: rgba(44, 169, 225, .8);
+      font-size: 15px;
+    }
+
+    .new::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background-color: rgba(44, 169, 225, .8);
+    }
+
     #closed-btn,
     #closed-btn2,
     #closed-btn3,
@@ -114,7 +133,7 @@
     #closed-btn4:hover,
     #closed-btn5:hover {
       background: #ffffff;
-      color:#1e50a2;
+      color: #1e50a2;
       border: 1px solid #1e50a2;
     }
 
@@ -146,8 +165,11 @@
 
   <div id="overview"><span id="closed-btn" class="py-2 px-3 text-xs"><i class="fa-solid fa-arrow-left"></i></span>
     <h1 class="text-xl pl-3 pt-3">Traffic Visualization</h1>
+    <span class="text-xs ja pl-6"> − 交通事故発生件数の可視化</span>
 
-  </div>
+    <!--<p class="new text-lg mx-3" data-en="Newly Arrived Information">新着情報</p>-->
+
+  </div><!-- overview -->
 
   <span class="container"></span>
 

@@ -1,16 +1,48 @@
 <!DOCTYPE HTML>
 <html lang="ja">
-<title>交通事故発生件数を3Dに可視化</title>
+<title>Traffic Visualization</title>
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
   <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta property="og:title" content="Traffic Visualization" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://trafficmap.netlify.app/ogp.jpg" />
+  <meta name="description" content="警察庁が公開しているオープンデータを用いて、交通事故発生件数を３可視化しました。年間30万件以上の事故が発生しています。この可視化を通して、件数が少しでも減ることを願っています。" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Traffic Visualization" />
+  <meta name="twitter:image" content="https://trafficmap.netlify.app/ogp.jpg" />
   <meta name="author" content="仁志">
   <meta name="keywords" content="3d,3D,交通,交通事故,DeckGL,deck,maplibregl,maplibre"/>
 
-  <script src="https://unpkg.com/deck.gl@^8.1.0/dist.min.js"></script>
-  <script src='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js'></script>
-  <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
-  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="shortcut icon" href="./apple-touch-icon.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
+    integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  <link rel="manifest" href="./manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').then(function () {
+        console.log('Service Worker Registered');
+      });
+    }
+  </script>
+
+</head>
+<body>
+
+
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
@@ -22,76 +54,5 @@
     gtag('config', 'G-MPP84V2NHB');
   </script>
 
-  <style>
-    html,body {
-      padding: 0;
-      margin: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .deck-tooltip {
-      font-family: Helvetica, Arial, sans-serif;
-      padding: 8px !important;
-      color: #fff !important;
-      background: #192f60 !important;
-      max-width: 110px;
-      font-size: .8em;
-      opacity: 0.8;
-    }
-
-  </style>
-</head>
-
-<body>
-
-</body>
-
-<script type="text/javascript">
-
-  const {DeckGL, GridLayer} = deck;
-
-  const data = d3.csv('./2023.csv');
-
-  const colorRange  = [
-    [0, 255, 255, 127],
-    [63, 255, 0, 127],
-    [255, 255, 0, 127],
-    [255, 127, 60, 170],
-    [255, 0, 0, 212],
-    [152, 0, 38, 255]
-    ];
-
-  const layer = new GridLayer({
-    id: 'grid',
-    data,
-    getPosition: d => [Number(d.lng), Number(d.lat)],
-    colorRange,
-    getColorWeight: point => 1,
-    getElevationWeight: point => 1,
-    colorAggregation: 'SUM',
-    elevationScale: 350,
-    extruded: true,
-    pickable: true,
-    cellSize: 2000,
-    opacity: 1,
-    coverage: 1,
-  });
-
-  new DeckGL({
-    mapStyle: 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
-    initialViewState: {
-      longitude: 137.175,
-      latitude: 37.066,
-      zoom: 4.8,
-      maxZoom: 20,
-      pitch: 40,
-      bearing: -10
-    },
-    controller: true,
-    layers: layer,
-    getTooltip: ({object}) => object && `全事故件数: ${object.count}`
-  });
-</script>
-
-</html>
+  </body>
+  </html>

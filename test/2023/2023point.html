@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<title>交通事故発生件数を3Dに可視化</title>
+
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+  <meta charset="UTF-8" name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="author" content="仁志">
+  <meta name="keywords" content="3d,3D,交通,交通事故,DeckGL,deck,maplibregl,maplibre" />
+
+  <script src="https://unpkg.com/deck.gl@^8.1.0/dist.min.js"></script>
+  <script src='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-MPP84V2NHB');
+  </script>
+
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .deck-tooltip {
+      font-family: Helvetica, Arial, sans-serif;
+      padding: 8px !important;
+      color: #fff !important;
+      background: #192f60 !important;
+      max-width: 110px;
+      font-size: .8em;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+</body>
+
+<script type="text/javascript">
+
+  const { DeckGL, ScatterplotLayer } = deck;
+
+  const data = d3.csv('./data.csv');
+
+  const tooltip = (d) => {
+
+    if (!d || !d.object) return null;
+    let obj = d.object;
+
+    const html_tr = ["<table>", obj.DAY + " " + obj.TIME , "</table>"].join("\n");
+
+    return {
+      html: html_tr
+    };
+  };
+
+  const layer = new ScatterplotLayer({
+    id: 'scatterplot-layer',
+    data,
+    pickable: true,
+    opacity: 0.8,
+    stroked: true,
+    filled: true,
+    radiusScale: 3,
+    radiusMinPixels: 3,
+    radiusMaxPixels: 3,
+    lineWidthMinPixels: 1,
+    getPosition: d => [Number(d.LNG), Number(d.LAT)],
+    getRadius: d => 15,
+    getFillColor: d => [232, 57, 41]
+  })
+
+  new DeckGL({
+    mapStyle: 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
+    initialViewState: {
+      longitude: 137.175,
+      latitude: 37.066,
+      zoom: 4.8,
+      maxZoom: 20,
+      pitch: 40,
+      bearing: -10
+    },
+    controller: true,
+    layers: layer,
+    getTooltip: tooltip
+  });
+</script>
+
+</html>

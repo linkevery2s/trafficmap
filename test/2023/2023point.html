@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="ja">
-<title>交通事故発生件数を3Dに可視化</title>
+<title>map_point</title>
 
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
   <meta charset="UTF-8" name="viewport"
@@ -14,15 +14,7 @@
   <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
   <script src="https://d3js.org/d3.v5.min.js"></script>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-MPP84V2NHB');
-  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     html,
@@ -31,23 +23,37 @@
       margin: 0;
       width: 100%;
       height: 100%;
+      z-index: 0;
+    }
+
+    body {
+      font-family: "Source Han Serif JP", "Noto Serif CJK JP", "游明朝体", "Yu Mincho", YuMincho, serif;
+    }
+
+    .title{
+      right: 0;
+      top: 0;
+      position: fixed;
+      background: rgba(255,255,255,.8);
+      z-index: 5;
     }
 
     .deck-tooltip {
       font-family: Helvetica, Arial, sans-serif;
       padding: 8px !important;
-      color: #fff !important;
+      color: #ffffff !important;
       background: #192f60 !important;
       max-width: 110px;
       font-size: .8em;
       opacity: 0.8;
+      border: 1px solid #ffffff;
     }
   </style>
 </head>
 
 <body>
 
-</body>
+<div class="title p-3">2023.PointMap</div>
 
 <script type="text/javascript">
 
@@ -99,4 +105,15 @@
   });
 </script>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-MPP84V2NHB');
+  </script>
+
+</body>
 </html>

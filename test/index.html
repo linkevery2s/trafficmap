@@ -80,7 +80,10 @@
       cursor: pointer;
     }
 
-    #overview {
+    #overview,
+    #map,
+    #database,
+    #share {
       position: fixed;
       background: rgba(255, 255, 255, 1);
       z-index: 9;
@@ -93,23 +96,8 @@
       display: none;
     }
 
-    .ja{
+    .ja {
       color: #1e50a2;
-    }
-
-    .new::before {
-      content: attr(data-en);
-      display: block;
-      color: rgba(44, 169, 225, .8);
-      font-size: 15px;
-    }
-
-    .new::after {
-      content: '';
-      display: block;
-      width: 40px;
-      height: 1px;
-      background-color: rgba(44, 169, 225, .8);
     }
 
     #closed-btn,
@@ -167,9 +155,49 @@
     <h1 class="text-xl pl-3 pt-3">Traffic Visualization</h1>
     <span class="text-xs ja pl-6"> − 交通事故発生件数の可視化</span>
 
-    <!--<p class="new text-lg mx-3" data-en="Newly Arrived Information">新着情報</p>-->
+    <hr>
+
+    <h2 class="text-lg mt-3 px-3">はじめに</h2>
+
+    <p class="text-sm px-3">このアプリケーションは、</p>
 
   </div><!-- overview -->
+
+  <div id="map"><span id="closed-btn2" class="py-2 px-3 text-xs"><i class="fa-solid fa-arrow-left"></i></span>
+    <h1 class="text-xl pl-3 pt-3">Statistics Selecet</h1>
+    <span class="text-xs ja pl-6"> − 統計資料の選択</span>
+
+    <hr>
+
+    <!--<p class="new text-lg mx-3" data-en="Newly Arrived Information">新着情報</p>-->
+
+  </div><!-- map -->
+
+  <div id="database"><span id="closed-btn3" class="py-2 px-3 text-xs"><i class="fa-solid fa-arrow-left"></i></span>
+    <h1 class="text-xl pl-3 pt-3">Open Data</h1>
+    <span class="text-xs ja pl-6"> − 使用したオープンデータ</span>
+
+    <hr>
+
+    <!--<p class="new text-lg mx-3" data-en="Newly Arrived Information">新着情報</p>-->
+
+  </div><!-- database -->
+
+  <div id="share"><span id="closed-btn4" class="py-2 px-3 text-xs"><i class="fa-solid fa-arrow-left"></i></span>
+    <h1 class="text-xl pl-3 pt-3">Share</h1>
+    <span class="text-xs ja pl-6"> − シェア</span>
+
+    <hr>
+
+    <h2 class="text-lg mt-3 mb-5 px-3">アプリURL</h2>
+
+    <p class="mt-3 mb-5 text-sm px-3">https://roadstationmap.netlify.app/</p>
+
+    <h2 class="text-lg mt-3 mb-3 px-3">二次元バーコード</h2>
+
+    <img src="./qr.jpg" class="px-3" alt="二次元バーコード">
+
+  </div><!-- share -->
 
   <span class="container"></span>
 
@@ -181,15 +209,57 @@
     cont.innerHTML = "<iframe src='./2023/2023visual.html' width='100%' height= '100%' border='0'></iframe>";
 
     const home = document.querySelector(".home");
+    const map = document.querySelector(".map");
+    const database = document.querySelector(".database");
+    const share = document.querySelector(".share");
 
     home.addEventListener("click", () => {
       $('#overview').fadeIn();
+      $('#map').fadeOut();
+      $('#database').fadeOut();
+      $('#share').fadeOut();
+    })
+
+    map.addEventListener("click", () => {
+      $('#overview').fadeOut();
+      $('#map').fadeIn();
+      $('#database').fadeOut();
+      $('#share').fadeOut();
+    })
+
+    database.addEventListener("click", () => {
+      $('#overview').fadeOut();
+      $('#map').fadeOut();
+      $('#database').fadeIn();
+      $('#share').fadeOut();
+    })
+
+    share.addEventListener("click", () => {
+      $('#overview').fadeOut();
+      $('#map').fadeOut();
+      $('#database').fadeOut();
+      $('#share').fadeIn();
     })
 
     const closed_btn = document.querySelector("#closed-btn");
+    const closed_btn2 = document.querySelector("#closed-btn2");
+    const closed_btn3 = document.querySelector("#closed-btn3");
+    const closed_btn4 = document.querySelector("#closed-btn4");
 
     closed_btn.addEventListener('click', () => {
       $('#overview').fadeOut();
+    });
+
+    closed_btn2.addEventListener('click', () => {
+      $('#map').fadeOut();
+    });
+
+    closed_btn3.addEventListener('click', () => {
+      $('#database').fadeOut();
+    });
+
+    closed_btn4.addEventListener('click', () => {
+      $('#share').fadeOut();
     });
 
   </script>

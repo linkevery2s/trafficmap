@@ -91,7 +91,9 @@
       pitch: 40,
       bearing: -10
     },
-    controller: true,
+    controller: {
+      touchRotate: true
+    },
     layers: layer,
     getTooltip: ({object}) => object && `全事故件数: ${object.count}`
   });

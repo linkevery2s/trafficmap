@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="ja">
-<title>map_point</title>
+<title>pointmap</title>
 
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
   <meta charset="UTF-8" name="viewport"
@@ -28,11 +28,11 @@
       font-family: "Source Han Serif JP", "Noto Serif CJK JP", "游明朝体", "Yu Mincho", YuMincho, serif;
     }
 
-    .title{
+    .title {
       right: 0;
       top: 0;
       position: fixed;
-      background: rgba(255,255,255,.8);
+      background: rgba(255, 255, 255, .8);
       z-index: 5;
     }
 
@@ -41,7 +41,7 @@
       padding: 8px !important;
       color: #ffffff !important;
       background: #192f60 !important;
-      max-width: 110px;
+      width: 230px;
       font-size: .8em;
       opacity: 0.8;
       border: 1px solid #ffffff;
@@ -51,57 +51,60 @@
 
 <body>
 
-<div class="title p-3">2023.PointMap</div>
+  <div class="title p-3">2023.PointMap</div>
 
-<script type="text/javascript">
+  <script type="text/javascript">
 
-  const { DeckGL, ScatterplotLayer } = deck;
+    const { DeckGL, ScatterplotLayer } = deck;
 
-  const data = d3.csv('./data.csv');
+    const data = d3.csv('./data.csv');
 
-  const tooltip = (d) => {
+    const tooltip = (d) => {
 
-    if (!d || !d.object) return null;
-    let obj = d.object;
+      if (!d || !d.object) return null;
+      let obj = d.object;
 
-    const html_tr = ["<table>", obj.DAY + " " + obj.TIME , "</table>"].join("\n");
+      let title;
 
-    return {
-      html: html_tr
+      title = obj.day + " " + obj.hh + "時" + obj.mm + "分";
+
+      const html_tr = ["<table>", title, "</table>"].join("\n");
+
+      return {
+        html: html_tr
+      };
     };
-  };
 
-  const layer = new ScatterplotLayer({
-    id: 'scatterplot-layer',
-    data,
-    pickable: true,
-    opacity: 0.8,
-    stroked: true,
-    filled: true,
-    radiusScale: 3,
-    radiusMinPixels: 3,
-    radiusMaxPixels: 3,
-    lineWidthMinPixels: 1,
-    getPosition: d => [Number(d.LNG), Number(d.LAT)],
-    getRadius: d => 15,
-    getFillColor: d => [232, 57, 41]
-  })
+    const layer = new ScatterplotLayer({
+      id: 'scatterplot-layer',
+      data,
+      pickable: true,
+      opacity: 0.8,
+      stroked: true,
+      filled: true,
+      radiusScale: 6,
+      radiusMinPixels: 3,
+      radiusMaxPixels: 10,
+      lineWidthMinPixels: 1,
+      getPosition: d => [Number(d.lng), Number(d.lat)],
+      getFillColor: d => [232, 57, 41]
+    })
 
-  new DeckGL({
-    mapStyle: 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
-    initialViewState: {
-      longitude: 137.175,
-      latitude: 37.066,
-      zoom: 4.8,
-      maxZoom: 20,
-      pitch: 40,
-      bearing: -10
-    },
-    controller: true,
-    layers: layer,
-    getTooltip: tooltip
-  });
-</script>
+    new DeckGL({
+      mapStyle: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      initialViewState: {
+        longitude: 137.175,
+        latitude: 37.066,
+        zoom: 4.8,
+        maxZoom: 20,
+        pitch: 40,
+        bearing: -10
+      },
+      controller: true,
+      layers: layer,
+      getTooltip: tooltip
+    });
+  </script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
@@ -114,4 +117,5 @@
   </script>
 
 </body>
+
 </html>

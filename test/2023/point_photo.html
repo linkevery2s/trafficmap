@@ -30,7 +30,7 @@
 
   <script type="module">
 
-    const { DeckGL, ScatterplotLayer } = deck;
+    const { DeckGL, ScatterplotLayer, GeoJsonLayer } = deck;
 
     let lat; let lng; let zoom; let pitch; let bearing; let value;
 
@@ -57,7 +57,7 @@
 
     }
 
-    const basemap = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+    const basemap = "../mapdata/basemap_tiri_photo.json";
 
     const data = await d3.csv('./all.csv');
 
@@ -103,6 +103,18 @@
       getFillColor: d => [232, 57, 41]
     })
 
+    const prefectures_line = new GeoJsonLayer({
+      id: 'prefectures_line',
+      data: "../mapdata/prefectures_line.geojson",
+      filled: true,
+      lineWidthMinPixels: 2,
+      getFillColor: [255, 255, 255],
+      getLineColor: [255, 255, 255],
+      getLineWidth: 2,
+      opacity: 1,
+      pickable: false
+    });
+
     new DeckGL({
       container: 'container',
       mapStyle: basemap,
@@ -117,7 +129,7 @@
       controller: {
         touchRotate: true
       },
-      layers: layer,
+      layers: [prefectures_line, layer],
       getTooltip: tooltip
     });
 

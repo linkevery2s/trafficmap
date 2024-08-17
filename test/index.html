@@ -72,12 +72,17 @@
       width: 12%;
       height: 100%;
       max-width: 70px;
-      border-right: 1px solid #000;
-      background: rgba(255, 255, 255, 1);
+      border-right: 1px solid #000000;
+      background: #ffffff;
     }
 
     .nav p {
       cursor: pointer;
+    }
+
+    h2 {
+      border-bottom: 3px dashed #71c598;
+      display: inline-block;
     }
 
     #overview,
@@ -86,7 +91,7 @@
     #share,
     #manual {
       position: fixed;
-      background: rgba(255, 255, 255, 1);
+      background: #ffffff;
       z-index: 9;
       width: 70%;
       height: 100%;
@@ -98,7 +103,7 @@
     }
 
     .ja {
-      color: #1e50a2;
+      color: #264af4;
     }
 
     #closed-btn,
@@ -111,7 +116,7 @@
       right: 5px;
       border-radius: .3em;
       color: #ffffff;
-      background: #1e50a2;
+      background: #264af4;
       cursor: pointer;
       text-align: center;
     }
@@ -122,13 +127,13 @@
     #closed-btn4:hover,
     #closed-btn5:hover {
       background: #ffffff;
-      color: #1e50a2;
-      border: 1px solid #1e50a2;
+      color: #264af4;
+      border: 1px solid #264af4;
     }
 
     .statis {
-      border-bottom: 1px dotted #1e50a2;
-      color: #1e50a2;
+      border-bottom: 1px dotted #008bf2;
+      color: #008bf2;
       cursor: pointer;
     }
 
@@ -169,17 +174,21 @@
 
     <hr class="mt-3">
 
-    <h2 class="text-lg mt-3 px-3">はじめに</h2>
+    <h2 class="text-lg mt-3 mx-3">はじめに</h2>
 
-    <p class="text-sm px-3 mt-3">このアプリケーションは、</p>
+    <p class="text-sm px-3 mt-3">このアプリケーションは、警察庁のオープンデータを用いて、日本で発生した交通事故をマップやグラフで可視化するアプリケーションです。</p>
 
-    <hr class="mt-3">
+    <p class="text-sm px-3 mt-3">毎年、全国で30万件ほどの事故が発生しています。分析することで少しでも事故発生件数を減らすことに繋がっていけばという思いで開発しました。</p>
 
-    <h2 class="text-lg mt-3 px-3">インストール方法</h2>
+    <p class="text-sm px-3 mt-3">齋藤 仁志.</p>
 
-    <p class="mt-3"><img src="./install.jpg" width="100%" alt="インストール方法"></p>
+
+    <h2 class="text-lg mt-7 mx-3">インストール方法</h2>
 
     <p class="text-sm px-3 mt-3">PWAに対応しているため、WEBブラウザの「ホーム画面に追加」からインストールできます。</p>
+    <p class="mt-3"><img src="./install.jpg" width="100%" alt="インストール方法"></p>
+
+
 
 
 
@@ -191,10 +200,18 @@
 
     <hr class="mt-3">
 
-    <h2 class="text-lg ml-3 mt-3">2023年</h2>
+    <h2 class="text-lg ml-3 mt-3 mb-3">2023年</h2>
 
-    <span id="2023/visual" class="text-sm ml-3 statis" onclick="mapshow(this);">VisualMap</span> <span id="2023/point"
-      class="text-sm statis" onclick="mapshow(this);">PointMap</span>
+    <div class="2023map">
+      <span id="2023/visual" class="text-sm ml-3 statis" onclick="mapshow(this);">VisualMap <i
+          class="fa-solid fa-sm fa-location-dot"></i></span>
+
+      <span id="2023/point" class="text-sm ml-3 statis" onclick="mapshow(this);">PointMap（basic） <i
+          class="fa-solid fa-sm fa-location-dot"></i></span>
+
+      <span id="2023/point_photo" class="text-sm ml-3 statis" onclick="mapshow(this);">PointMap（photo） <i
+          class="fa-solid fa-sm fa-location-dot"></i></span>
+    </div>
 
   </div><!-- map -->
 
@@ -214,11 +231,11 @@
 
     <hr class="mt-3">
 
-    <h2 class="text-lg mt-3 mb-5 px-3">アプリURL</h2>
+    <h2 class="text-lg mt-3 mb-5 mx-3">アプリURL</h2>
 
     <p class="mt-3 mb-5 text-sm px-3">https://trafficmap.netlify.app/</p>
 
-    <h2 class="text-lg mt-3 mb-3 px-3">二次元バーコード</h2>
+    <h2 class="text-lg mt-3 mb-3 mx-3">二次元バーコード</h2>
 
     <img src="./qr.jpg" class="px-3" alt="二次元バーコード">
 

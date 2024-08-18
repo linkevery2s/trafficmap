@@ -126,8 +126,8 @@
       let rotateCamera = () => {
         initialViewState = {
           ...initialViewState,
-          bearing: initialViewState.bearing - 30,
-          transitionDuration: 1000,
+          bearing: initialViewState.bearing - 10,
+          transitionDuration: 500,
           transitionInterpolator: new LinearInterpolator(['bearing']),
           onTransitionEnd: rotateCamera
         };

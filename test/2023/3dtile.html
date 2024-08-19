@@ -6,7 +6,7 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>first person view</title>
+  <title>3d tile</title>
 
   <script src="https://unpkg.com/deck.gl@^8.1.0/dist.min.js"></script>
   <script src="https://unpkg.com/@loaders.gl/3d-tiles@^2.3.0/dist/dist.min.js"></script>
@@ -72,12 +72,13 @@
 
     onload = async () => {
 
-      const { DeckGL, Tile3DLayer, FirstPersonView, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator } = deck;
+      const { DeckGL, Tile3DLayer, FirstPersonView, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator, GeoJsonLayer } = deck;
+      const {I3SLoader} = loaders;
 
       const tilelayer = new TileLayer({
         data: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
         minZoom: 0,
-        maxZoom: 19,
+        maxZoom: 17,
         tileSize: 256,
 
         renderSubLayers: props => {
@@ -116,11 +117,10 @@
       let initialViewState = {
         longitude: 136.8843,
         latitude: 35.1713,
-        zoom: 13,
-        maxZoom: 20,
-        pitch: -25,
-        bearing: 0,
-        position: [30, -90, 10]
+        zoom: 15,
+        maxZoom: 17,
+        pitch: 70,
+        bearing: -10
       };
 
       let rotateCamera = () => {
@@ -135,14 +135,7 @@
       };
 
       const deckgl = new DeckGL({
-        views: [
-          new FirstPersonView({
-            controller: true,
-            fovy: 70,
-            // near: 0.1,
-            // far: 1000,
-          })
-        ],
+
         initialViewState: initialViewState,
         onViewStateChange: ({ viewState }) => {
           initialViewState.longitude = viewState.longitude;
@@ -150,7 +143,6 @@
           initialViewState.zoom = viewState.zoom;
           initialViewState.pitch = viewState.pitch;
           initialViewState.bearing = viewState.bearing;
-          initialViewState.position = viewState.position;
         },
         controller: {
           touchRotate: true

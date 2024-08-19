@@ -6,7 +6,7 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>firstperson_view</title>
+  <title>first person view</title>
 
   <script src="https://unpkg.com/deck.gl@^8.1.0/dist.min.js"></script>
   <script src="https://unpkg.com/@loaders.gl/3d-tiles@^2.3.0/dist/dist.min.js"></script>
@@ -76,7 +76,7 @@
       const { DeckGL, Tile3DLayer, FirstPersonView, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator } = deck;
 
       const tilelayer = new TileLayer({
-        data: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        data: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
         minZoom: 0,
         maxZoom: 19,
         tileSize: 256,
@@ -100,6 +100,7 @@
         pointSize: 1,
         data: 'https://assets.cms.plateau.reearth.io/assets/cb/1ca1d1-148d-4d34-a70b-d3ef033e0c3a/23100_nagoya-shi_2021_3dtiles_2_op_bldg_23105_nakamura-ku_lod1/tileset.json',
         loader: Tiles3DLoader,
+        opacity: 0.8,
         onTilesetLoad: (tileset) => {
           const { cartographicCenter } = tileset;
           const [longitude, latitude] = cartographicCenter;
@@ -150,6 +151,7 @@
           initialViewState.zoom = viewState.zoom;
           initialViewState.pitch = viewState.pitch;
           initialViewState.bearing = viewState.bearing;
+          initialViewState.position = viewState.position;
         },
         controller: {
           touchRotate: true

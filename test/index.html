@@ -137,6 +137,10 @@
       cursor: pointer;
     }
 
+    .nav_scroll{
+      height: 90%;
+    }
+
     @media screen and (min-width: 768px) {
 
       .nav {
@@ -174,7 +178,7 @@
 
     <hr class="mt-3">
 
-    <div class="overflow-y-scroll">
+    <div class="overflow-y-scroll nav_scroll">
 
       <h2 class="text-lg mt-3 mx-3">はじめに</h2>
 
@@ -214,6 +218,13 @@
           <br>
       <span id="2023/point_photo" class="text-sm ml-3 statis" onclick="mapshow(this);">PointMap（photo）<i
           class="fa-solid fa-sm fa-location-dot"></i></span>
+
+          <br>
+          <span id="2023/3dtile" class="text-sm ml-3 statis" onclick="mapshow(this);">3d tile <i
+              class="fa-solid fa-sm fa-location-dot"></i></span>
+
+              <span id="2023/first_person_view" class="text-sm ml-1 md:ml-5 statis" onclick="mapshow(this);">Person View <i
+                class="fa-solid fa-sm fa-location-dot"></i></span>
     </div>
 
   </div><!-- map -->

@@ -21,6 +21,8 @@
   <link href='../rotate.css' rel='stylesheet' />
   <link href='../pointmap.css' rel='stylesheet' />
 
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <script src="https://d3js.org/d3.v5.min.js"></script>
 
   <style>
@@ -43,6 +45,8 @@
     <div class="button"><i class="fa-solid fa-rotate"></i></div>
   </span>
 
+  <div class="title p-3"><span id="title"></span></div>
+
   <div class="attribution">
     © <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>
   </div>
@@ -53,7 +57,27 @@
 
     onload = async () => {
 
-      const { DeckGL, Tile3DLayer, FirstPersonView, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator } = deck;
+      const { DeckGL, Tile3DLayer, FirstPersonView, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator, ScatterplotLayer } = deck;
+
+      const url_hash = location.hash;
+
+      const title = document.querySelector("#title");
+
+      let year;
+
+      let data;
+
+      if (url_hash === "") {
+        data = "";
+
+      } else {
+        year = url_hash.split("#")[1];
+
+        data = await d3.csv("./" + year + '/all.csv');
+
+        title.innerHTML = year + ".first person view";
+
+      }
 
       const tilelayer = new TileLayer({
         data: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
@@ -94,10 +118,43 @@
         },
       });
 
+      const layer = new ScatterplotLayer({
+        id: 'scatterplot-layer',
+        data,
+        pickable: true,
+        opacity: 0.8,
+        stroked: true,
+        filled: true,
+        radiusScale: 10,
+        radiusMinPixels: 3,
+        radiusMaxPixels: 10,
+        lineWidthMinPixels: 1,
+        getPosition: d => [Number(d.lng), Number(d.lat)],
+        getFillColor: d => [232, 57, 41],
+        getLineColor: d => [255, 255, 255]
+      });
+
+      const tooltip = (d) => {
+
+        if (!d || !d.object) return null;
+        let obj = d.object;
+
+        let title;
+
+        title = obj.day + " " + obj.hh + "時" + obj.mm + "分";
+
+        const html_tr = ["<table>", title, "</table>"].join("\n");
+
+        return {
+          html: html_tr
+        };
+      };
+
       let initialViewState = {
         longitude: 136.8843,
         latitude: 35.1713,
         zoom: 13,
+        minZoom: 11,
         maxZoom: 20,
         pitch: -25,
         bearing: 0,
@@ -136,7 +193,8 @@
         controller: {
           touchRotate: true
         },
-        layers: [tilelayer, layer1]
+        layers: [tilelayer, layer1, layer],
+        getTooltip: tooltip
       });
 
 

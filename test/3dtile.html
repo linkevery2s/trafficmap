@@ -20,23 +20,13 @@
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <link href='../rotate.css' rel='stylesheet' />
-  <link href='../pointmap.css' rel='stylesheet' />
+  <link href='./rotate.css' rel='stylesheet' />
+  <link href='./pointmap.css' rel='stylesheet' />
+
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
 
-  <style>
-    .attribution {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      z-index: 9;
-      padding: 2px 4px;
-      background-color: rgba(255, 255, 255, 0.5);
-      font-size: 11px;
-      pointer-events: auto;
-    }
-  </style>
 </head>
 
 <body>
@@ -45,9 +35,7 @@
     <div class="button"><i class="fa-solid fa-rotate"></i></div>
   </span>
 
-  <div class="attribution">
-    © <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>
-  </div>
+  <div class="title p-3"><span id="title"></span></div>
 
   <script type="module">
 
@@ -55,13 +43,37 @@
 
     onload = async () => {
 
-      const data = await d3.csv('./all.csv');
+      const url_hash = location.hash;
+      console.log(url_hash);
+
+      const title = document.querySelector("#title");
+
+      let year;
+
+      let data;
+
+      if (url_hash === "") {
+        data = "";
+        title = "";
+
+      } else {
+        year = url_hash.split("#")[1];
+
+        console.log(year);
+
+        data = await d3.csv("./" + year + '/all.csv');
+
+        title.innerHTML = year + ".3d tile";
+
+      }
+
+      //const data = await d3.csv('./all.csv');
 
       const { DeckGL, Tile3DLayer, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator, ScatterplotLayer } = deck;
 
       const basemap = "https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json";
 
-      const tilelayer = new TileLayer({
+      /* const tilelayer = new TileLayer({
         data: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
         minZoom: 0,
         maxZoom: 17,
@@ -79,7 +91,7 @@
             bounds: [west, south, east, north]
           });
         }
-      });
+      });*/
 
       const layer1 = new Tile3DLayer({
         id: 'tile3dlayer1',
@@ -104,6 +116,7 @@
         longitude: 136.8843,
         latitude: 35.1713,
         zoom: 15,
+        minZoom: 14,
         maxZoom: 17,
         pitch: 70,
         bearing: -10
@@ -135,7 +148,6 @@
         getFillColor: d => [232, 57, 41],
         getLineColor: d => [255, 255, 255]
       });
-
 
       const tooltip = (d) => {
 

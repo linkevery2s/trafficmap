@@ -6,10 +6,12 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>first person view</title>
+  <title>3D防災マップ/title>
 
   <script src="https://unpkg.com/deck.gl@^8.9.0/dist.min.js"></script>
   <script src="https://unpkg.com/@loaders.gl/3d-tiles@^2.3.0/dist/dist.min.js"></script>
+  <script src='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -25,18 +27,6 @@
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
 
-  <style>
-    .attribution {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      z-index: 9;
-      padding: 2px 4px;
-      background-color: rgba(255, 255, 255, 0.5);
-      font-size: 11px;
-      pointer-events: auto;
-    }
-  </style>
 </head>
 
 <body>
@@ -45,46 +35,20 @@
     <div class="button"><i class="fa-solid fa-rotate"></i></div>
   </span>
 
-  <div class="title p-3"><span id="title"></span></div>
-
-  <div class="attribution">
-    © <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>
-  </div>
-
   <script type="module">
 
     import { Vector3 } from 'https://cdn.jsdelivr.net/npm/math.gl@4.0.0/+esm';
 
     onload = async () => {
 
-      const { DeckGL, Tile3DLayer, FirstPersonView, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator, ScatterplotLayer } = deck;
+      const { DeckGL, Tile3DLayer, TileLayer, BitmapLayer, COORDINATE_SYSTEM, LinearInterpolator, ScatterplotLayer } = deck;
 
-      const url_hash = location.hash;
-
-      const title = document.querySelector("#title");
-
-      let year;
-
-      let data;
-
-      if (url_hash === "") {
-        data = "";
-        title = "";
-        console.log("#年数をURLに入れてください。");
-
-      } else {
-        year = url_hash.split("#")[1];
-
-        data = await d3.csv("./" + year + '/all.csv');
-
-        title.innerHTML = year + ".first person view";
-
-      }
+      const basemap = "https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json";
 
       const tilelayer = new TileLayer({
         data: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
         minZoom: 0,
-        maxZoom: 19,
+        maxZoom: 17,
         tileSize: 256,
 
         renderSubLayers: props => {
@@ -104,9 +68,9 @@
       const layer1 = new Tile3DLayer({
         id: 'tile3dlayer1',
         pointSize: 1,
-        data: 'https://assets.cms.plateau.reearth.io/assets/cb/1ca1d1-148d-4d34-a70b-d3ef033e0c3a/23100_nagoya-shi_2021_3dtiles_2_op_bldg_23105_nakamura-ku_lod1/tileset.json',
+        data: 'https://assets.cms.plateau.reearth.io/assets/bf/d51331-61c6-4d4b-ae9d-b699f0043b96/23100_nagoya-shi_city_2022_citygml_3_op_bldg_3dtiles_23113_moriyama-ku_lod1/tileset.json',
         loader: Tiles3DLoader,
-        opacity: 0.8,
+        opacity: 0.9,
         onTilesetLoad: (tileset) => {
           const { cartographicCenter } = tileset;
           const [longitude, latitude] = cartographicCenter;
@@ -115,12 +79,56 @@
           tileHeader.content.cartographicOrigin = new Vector3(
             tileHeader.content.cartographicOrigin.x,
             tileHeader.content.cartographicOrigin.y,
-            tileHeader.content.cartographicOrigin.z - 40,
+            tileHeader.content.cartographicOrigin.z - 75,
           );
         },
+        operation: 'terrain+draw'
       });
 
-      const layer = new ScatterplotLayer({
+      const hazard_building = new TileLayer({
+        id: 'hazard-building',
+        data: 'https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png',
+        minZoom: 0,
+        maxZoom: 17,
+        tileSize: 256,
+        opacity: 0.4,
+        extensions: [new deck._TerrainExtension()],
+        renderSubLayers: props => {
+          const {
+            bbox: { west, south, east, north }
+          } = props.tile;
+
+          return new BitmapLayer(props, {
+            data: null,
+            image: props.data,
+            _imageCoordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
+            bounds: [west, south, east, north]
+          });
+        }
+      });
+
+      let initialViewState = {
+        longitude: 136.965,
+        latitude: 35.199,
+        zoom: 15,
+        minZoom: 14,
+        maxZoom: 17,
+        pitch: 70,
+        bearing: -10
+      };
+
+      let rotateCamera = () => {
+        initialViewState = {
+          ...initialViewState,
+          bearing: initialViewState.bearing - 10,
+          transitionDuration: 1000,
+          transitionInterpolator: new LinearInterpolator(['bearing']),
+          onTransitionEnd: rotateCamera
+        };
+        deckgl.setProps({ initialViewState });
+      };
+
+      /*const layer = new ScatterplotLayer({
         id: 'scatterplot-layer',
         data,
         pickable: true,
@@ -134,7 +142,7 @@
         getPosition: d => [Number(d.lng), Number(d.lat)],
         getFillColor: d => [232, 57, 41],
         getLineColor: d => [255, 255, 255]
-      });
+      });*/
 
       const tooltip = (d) => {
 
@@ -152,37 +160,8 @@
         };
       };
 
-      let initialViewState = {
-        longitude: 136.8843,
-        latitude: 35.1713,
-        zoom: 13,
-        minZoom: 11,
-        maxZoom: 20,
-        pitch: -25,
-        bearing: 0,
-        position: [30, -90, 10]
-      };
-
-      let rotateCamera = () => {
-        initialViewState = {
-          ...initialViewState,
-          bearing: initialViewState.bearing - 10,
-          transitionDuration: 500,
-          transitionInterpolator: new LinearInterpolator(['bearing']),
-          onTransitionEnd: rotateCamera
-        };
-        deckgl.setProps({ initialViewState });
-      };
-
       const deckgl = new DeckGL({
-        views: [
-          new FirstPersonView({
-            controller: true,
-            fovy: 70,
-            // near: 0.1,
-            // far: 1000,
-          })
-        ],
+        mapStyle: basemap,
         initialViewState: initialViewState,
         onViewStateChange: ({ viewState }) => {
           initialViewState.longitude = viewState.longitude;
@@ -190,12 +169,11 @@
           initialViewState.zoom = viewState.zoom;
           initialViewState.pitch = viewState.pitch;
           initialViewState.bearing = viewState.bearing;
-          initialViewState.position = viewState.position;
         },
         controller: {
           touchRotate: true
         },
-        layers: [tilelayer, layer1, layer],
+        layers: [layer1, hazard_building],
         getTooltip: tooltip
       });
 
@@ -206,16 +184,6 @@
       });
     }
 
-  </script>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPP84V2NHB"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-MPP84V2NHB');
   </script>
 
 </body>

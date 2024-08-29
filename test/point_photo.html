@@ -22,6 +22,9 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
   <link href='./rotate.css' rel='stylesheet' />
   <link href="./pointmap.css" rel="stylesheet" />
 
@@ -34,7 +37,8 @@
   <div id="container"></div>
 
   <span class="side_menu">
-    <div class="button"><i class="fa-solid fa-rotate"></i></div>
+    <div class="button" id="button"><i class="fa-solid fa-rotate"></i></div>
+    <div class="button2" id="button2"><i class="fa-solid fa-lg fa-stop"></i></div>
   </span>
 
   <div class="basic p-1">基本地図</div>
@@ -121,7 +125,7 @@
 
     const prefectures_line = new GeoJsonLayer({
       id: 'prefectures_line',
-      data: "../mapdata/prefectures_line.geojson",
+      data: "./mapdata/prefectures_line.geojson",
       filled: true,
       lineWidthMinPixels: 2,
       getFillColor: [255, 255, 255],
@@ -140,6 +144,18 @@
         onTransitionEnd: rotateCamera
       };
       deckgl.setProps({ initialViewState });
+    };
+
+    let stop = () => {
+      initialViewState = {
+        ...initialViewState,
+        bearing: initialViewState.bearing - 0.01,
+        transitionDuration: 0,
+        transitionInterpolator: new LinearInterpolator(['bearing']),
+        onTransitionEnd: stop
+      };
+      deckgl.setProps({ initialViewState });
+
     };
 
     const deckgl = new DeckGL({
@@ -178,8 +194,17 @@
     });
 
     const button = document.querySelector('.button');
+    const button2 = document.querySelector('.button2');
     button.addEventListener('click', () => {
       rotateCamera();
+      $("#button").hide();
+      $("#button2").show();
+    });
+
+    button2.addEventListener('click', () => {
+      stop();
+      $("#button2").hide();
+      $("#button").show();
     });
 
   </script>
